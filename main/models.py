@@ -1,8 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 # Create your models here.
-class Movie(models.Model):
-    # fields for the movie table
+class Infra(models.Model):
+    # fields for the Infra table
     name = models.CharField(max_length=300)
     director = models.CharField(max_length=300)
     cast = models.CharField(max_length=800)
@@ -18,7 +18,7 @@ class Movie(models.Model):
         return self.name
 
 class Review(models.Model):
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    Infra = models.ForeignKey(Infra, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     comment = models.TextField(max_length=5000)
     rating = models.FloatField(default=0)

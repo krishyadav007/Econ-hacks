@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name='movie',
+            model_name='Infra',
             name='image',
             field=models.URLField(default=None, null=True),
         ),

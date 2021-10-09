@@ -6,12 +6,12 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0002_movie_image'),
+        ('main', '0002_infra_image'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='movie',
+            model_name='Infra',
             name='averageRating',
             field=models.FloatField(default=0),
         ),

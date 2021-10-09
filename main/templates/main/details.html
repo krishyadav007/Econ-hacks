@@ -9,21 +9,21 @@
         <div class="card-body">
         <div class="row">
             <div class="col-md-4">
-                <img src="{{ movie.image }}" alt="{{ movie.name }}" class="img-fluid">
+                <img src="{{ Infra.image }}" alt="{{ Infra.name }}" class="img-fluid">
             </div>
             <div class="col-md-8">
                 <h3 class="text-center">
-                    {{ movie.name }}
+                    {{ Infra.name }}
                 </h3>
-                <p>{{ movie.description }}</p>
-                <h5>Director: {{ movie.director }}</h5>
-                <h5>Cast: {{ movie.cast }}</h5>
+                <p>{{ Infra.description }}</p>
+                <h5>Director: {{ Infra.director }}</h5>
+                <h5>Cast: {{ Infra.cast }}</h5>
                 <h5>Rating: {{ average }}/10</h5>
 
                 {% if request.user.is_authenticated %}
                     {% if request.user.is_superuser %}
-                        <a href="{% url 'main:edit_movies' movie.id %}" class="btn btn-warning">Edit Movie</a>
-                        <a href="{% url 'main:delete_movie' movie.id %}" class="btn btn-danger"  onclick="return confirm('Are you sure you want to delete this?');">Delete Movie</a>
+                        <a href="{% url 'main:edit_Infras' Infra.id %}" class="btn btn-warning">Edit Infra</a>
+                        <a href="{% url 'main:delete_Infra' Infra.id %}" class="btn btn-danger"  onclick="return confirm('Are you sure you want to delete this?');">Delete Infra</a>
                     {% endif %}
                 {% endif %}
             </div>
@@ -35,7 +35,7 @@
     <div class="card">
         <div class="card-body">
             <h3 class="text-center">Add Review</h3>
-            <form action="{% url 'main:add_review' movie.id %}" method="POST">
+            <form action="{% url 'main:add_review' Infra.id %}" method="POST">
                 {% csrf_token %}
                 <label for="comment">Review</label>
                 <textarea name="comment" id="comment" cols="30" rows="5" class="form-control"></textarea>
@@ -64,8 +64,8 @@
                                 <h5 class="text-left">{{ review.user.username }}</h5>
                                 <h5>{{ review.rating }}</h5>
                                 {% if request.user == review.user %}
-                                <a href="{% url 'main:edit_review' movie.id review.id %}">Edit</a>
-                                <a href="{% url 'main:delete_review' movie.id review.id %}" onclick="return confirm('Are you sure you want to delete this?');">Delete</a>
+                                <a href="{% url 'main:edit_review' Infra.id review.id %}">Edit</a>
+                                <a href="{% url 'main:delete_review' Infra.id review.id %}" onclick="return confirm('Are you sure you want to delete this?');">Delete</a>
                                 {% endif %}
 
                             </div>

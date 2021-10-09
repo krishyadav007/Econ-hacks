@@ -6,41 +6,41 @@ from django.db.models import Avg
 # Create your views here.
 def home(request):
     query = request.GET.get("title")
-    allMovies = None
+    allInfras = None
     if query:
-        allMovies = Movie.objects.filter(name__icontains=query)
+        allInfras = Infra.objects.filter(name__icontains=query)
     else:
-        allMovies = Movie.objects.all()  # select * from movie
+        allInfras = Infra.objects.all()  # select * from Infra
     
     context = {
-        "movies": allMovies,
+        "Infras": allInfras,
     }
 
     return render(request, 'main/index.html', context)
 
 # detail page
 def detail(request, id):
-    movie = Movie.objects.get(id=id) # select * from movie where id=id
-    reviews = Review.objects.filter(movie=id).order_by("-comment")
+    Infra = Infra.objects.get(id=id) # select * from Infra where id=id
+    reviews = Review.objects.filter(Infra=id).order_by("-comment")
 
     average = reviews.aggregate(Avg("rating"))["rating__avg"]
     if average == None:
         average = 0
     average = round(average, 2)
     context = {
-        "movie": movie,
+        "Infra": Infra,
         "reviews": reviews,
         "average": average
     }
     return render(request, 'main/details.html', context)
 
 
-# add movies to the database
-def add_movies(request):
+# add Infras to the database
+def add_Infras(request):
     if request.user.is_authenticated:
         if request.user.is_superuser:
             if request.method == "POST":
-                form = MovieForm(request.POST or None)
+                form = InfraForm(request.POST or None)
 
                 # check if the form is valid
                 if form.is_valid():
@@ -48,8 +48,8 @@ def add_movies(request):
                     data.save()
                     return redirect("main:home")
             else:
-                form = MovieForm()
-            return render(request, 'main/addmovies.html', {"form": form, "controller": "Add Movies"})
+                form = InfraForm()
+            return render(request, 'main/addInfras.html', {"form": form, "controller": "Add Infras"})
         
         # if they are not admin
         else:
@@ -59,24 +59,24 @@ def add_movies(request):
     return redirect("accounts:login")    
 
 
-# edit the movie
-def edit_movies(request, id):
+# edit the Infra
+def edit_Infras(request, id):
     if request.user.is_authenticated:
         if request.user.is_superuser:
-            # get the movies linked with id
-            movie = Movie.objects.get(id=id)
+            # get the Infras linked with id
+            Infra = Infra.objects.get(id=id)
 
             # form check
             if request.method == "POST":
-                form = MovieForm(request.POST or None, instance=movie)
+                form = InfraForm(request.POST or None, instance=Infra)
                 # check if form is valid
                 if form.is_valid():
                     data = form.save(commit=False)
                     data.save()
                     return redirect("main:detail", id)
             else:
-                form = MovieForm(instance=movie)
-            return render(request, 'main/addmovies.html', {"form": form, "controller": "Edit Movies"})
+                form = InfraForm(instance=Infra)
+            return render(request, 'main/addInfras.html', {"form": form, "controller": "Edit Infras"})
         # if they are not admin
         else:
             return redirect("main:home")
@@ -85,15 +85,15 @@ def edit_movies(request, id):
     return redirect("accounts:login") 
 
 
-# delete movies
-def delete_movies(request, id):
+# delete Infras
+def delete_Infras(request, id):
     if request.user.is_authenticated:
         if request.user.is_superuser:
             # get the moveis
-            movie = Movie.objects.get(id=id)
+            Infra = Infra.objects.get(id=id)
 
-            # delte the movie
-            movie.delete()
+            # delte the Infra
+            Infra.delete()
             return redirect("main:home")
         # if they are not admin
         else:
@@ -104,7 +104,7 @@ def delete_movies(request, id):
 
 def add_review(request, id):
     if request.user.is_authenticated:
-        movie = Movie.objects.get(id=id)
+        Infra = Infra.objects.get(id=id)
         if request.method == "POST":
             form = ReviewForm(request.POST or None)
             if form.is_valid():
@@ -112,7 +112,7 @@ def add_review(request, id):
                 data.comment = request.POST["comment"]
                 data.rating = request.POST["rating"]
                 data.user = request.user
-                data.movie = movie
+                data.Infra = Infra
                 data.save()
                 return redirect("main:detail", id)
         else:
@@ -123,11 +123,11 @@ def add_review(request, id):
 
 
 # edit the review
-def edit_review(request, movie_id, review_id):
+def edit_review(request, Infra_id, review_id):
     if request.user.is_authenticated:
-        movie = Movie.objects.get(id=movie_id)
+        Infra = Infra.objects.get(id=Infra_id)
         # review
-        review = Review.objects.get(movie=movie, id=review_id)
+        review = Review.objects.get(Infra=Infra, id=review_id)
 
         # check if the review was done by the logged in user
         if request.user == review.user:
@@ -141,29 +141,29 @@ def edit_review(request, movie_id, review_id):
                          return render(request, 'main/editreview.html', {"error": error, "form": form})
                     else:
                         data.save()
-                        return redirect("main:detail", movie_id)
+                        return redirect("main:detail", Infra_id)
             else:
                 form = ReviewForm(instance=review)
             return render(request, 'main/editreview.html', {"form": form})
         else:
-            return redirect("main:detail", movie_id)
+            return redirect("main:detail", Infra_id)
     else:
         return redirect("accounts:login")
 
 
 # delete reivew
-def delete_review(request, movie_id, review_id):
+def delete_review(request, Infra_id, review_id):
     if request.user.is_authenticated:
-        movie = Movie.objects.get(id=movie_id)
+        Infra = Infra.objects.get(id=Infra_id)
         # review
-        review = Review.objects.get(movie=movie, id=review_id)
+        review = Review.objects.get(Infra=Infra, id=review_id)
 
         # check if the review was done by the logged in user
         if request.user == review.user:
             # grant permission to delete
             review.delete()
 
-        return redirect("main:detail", movie_id)
+        return redirect("main:detail", Infra_id)
             
     else:
         return redirect("accounts:login")
