@@ -20,7 +20,7 @@ def home(request):
 
 # detail page
 def detail(request, id):
-    Infra = Infra.objects.get(id=id) # select * from Infra where id=id
+    infrastructure = Infra.objects.get(id=id) # select * from Infra where id=id
     reviews = Review.objects.filter(Infra=id).order_by("-comment")
 
     average = reviews.aggregate(Avg("rating"))["rating__avg"]
@@ -28,7 +28,7 @@ def detail(request, id):
         average = 0
     average = round(average, 2)
     context = {
-        "Infra": Infra,
+        "Infra": infrastructure,
         "reviews": reviews,
         "average": average
     }
@@ -64,18 +64,18 @@ def edit_Infras(request, id):
     if request.user.is_authenticated:
         if request.user.is_superuser:
             # get the Infras linked with id
-            Infra = Infra.objects.get(id=id)
+            infrastructure = Infra.objects.get(id=id)
 
             # form check
             if request.method == "POST":
-                form = InfraForm(request.POST or None, instance=Infra)
+                form = InfraForm(request.POST or None, instance=infrastructure)
                 # check if form is valid
                 if form.is_valid():
                     data = form.save(commit=False)
                     data.save()
                     return redirect("main:detail", id)
             else:
-                form = InfraForm(instance=Infra)
+                form = InfraForm(instance=infrastructure)
             return render(request, 'main/addInfras.html', {"form": form, "controller": "Edit Infras"})
         # if they are not admin
         else:
@@ -90,10 +90,10 @@ def delete_Infras(request, id):
     if request.user.is_authenticated:
         if request.user.is_superuser:
             # get the moveis
-            Infra = Infra.objects.get(id=id)
+            infrastructure = Infra.objects.get(id=id)
 
             # delte the Infra
-            Infra.delete()
+            infrastructure.delete()
             return redirect("main:home")
         # if they are not admin
         else:
@@ -104,7 +104,7 @@ def delete_Infras(request, id):
 
 def add_review(request, id):
     if request.user.is_authenticated:
-        Infra = Infra.objects.get(id=id)
+        infrastructure = Infra.objects.get(id=id)
         if request.method == "POST":
             form = ReviewForm(request.POST or None)
             if form.is_valid():
@@ -112,7 +112,7 @@ def add_review(request, id):
                 data.comment = request.POST["comment"]
                 data.rating = request.POST["rating"]
                 data.user = request.user
-                data.Infra = Infra
+                data.Infra = infrastructure
                 data.save()
                 return redirect("main:detail", id)
         else:
@@ -125,9 +125,9 @@ def add_review(request, id):
 # edit the review
 def edit_review(request, Infra_id, review_id):
     if request.user.is_authenticated:
-        Infra = Infra.objects.get(id=Infra_id)
+        infrastructure = Infra.objects.get(id=Infra_id)
         # review
-        review = Review.objects.get(Infra=Infra, id=review_id)
+        review = Review.objects.get(Infra=infrastructure, id=review_id)
 
         # check if the review was done by the logged in user
         if request.user == review.user:
@@ -154,9 +154,9 @@ def edit_review(request, Infra_id, review_id):
 # delete reivew
 def delete_review(request, Infra_id, review_id):
     if request.user.is_authenticated:
-        Infra = Infra.objects.get(id=Infra_id)
+        infrastructure = Infra.objects.get(id=Infra_id)
         # review
-        review = Review.objects.get(Infra=Infra, id=review_id)
+        review = Review.objects.get(Infra=infrastructure, id=review_id)
 
         # check if the review was done by the logged in user
         if request.user == review.user:
