@@ -6,10 +6,8 @@ from django.contrib.auth.models import User
 class Infra(models.Model):
     # fields for the Infra table
     name = models.CharField(max_length=300)
-    director = models.CharField(max_length=300)
-    cast = models.CharField(max_length=800)
+    owner = models.CharField(max_length=300)
     description = models.TextField(max_length=5000)
-    release_date = models.DateField()
     averageRating = models.FloatField(default=0)
     image = models.URLField(default=None, null=True)
     electricity = models.FloatField()

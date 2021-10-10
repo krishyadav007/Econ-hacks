@@ -17,12 +17,11 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Infra',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=300)),
-                ('director', models.CharField(max_length=300)),
-                ('cast', models.CharField(max_length=800)),
+                ('owner', models.CharField(max_length=300)),
                 ('description', models.TextField(max_length=5000)),
-                ('release_date', models.DateField()),
                 ('averageRating', models.FloatField(default=0)),
                 ('image', models.URLField(default=None, null=True)),
                 ('electricity', models.FloatField()),
@@ -44,11 +43,14 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Review',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
                 ('comment', models.TextField(max_length=5000)),
                 ('rating', models.FloatField(default=0)),
-                ('Infra', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='main.Infra')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('Infra', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='main.Infra')),
+                ('user', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
     ]
